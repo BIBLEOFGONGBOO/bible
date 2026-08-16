@@ -57,8 +57,8 @@
     });
   }
 
-  async function rest_(table, query, signal) {
-    var accessToken = await validAccessToken_();
+  async function rest_(table, query, signal, publicRead) {
+    var accessToken = publicRead ? '' : await validAccessToken_();
     var result = await fetch(baseUrl + '/rest/v1/' + table + '?' + query, {
       headers: headers_(accessToken),
       signal: signal
@@ -172,7 +172,9 @@
         name === 'region' ? 'region_tags=ilike.' + encodeURIComponent('*' + value + '*') :
         'topic_tags=ilike.' + encodeURIComponent('*' + value + '*'));
     });
-    return rest_('met_museum_objects', parts.join('&'), signal);
+    // The beta museum catalog is public. Avoid forwarding a stale member
+    // session that could turn an otherwise public read into an auth failure.
+    return rest_('met_museum_objects', parts.join('&'), signal, true);
   }
 
   async function peopleSearch_(payload, signal) {

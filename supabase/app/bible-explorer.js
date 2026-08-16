@@ -1537,6 +1537,18 @@ function museumDisplayTitle(record) {
   return (!title || /^untitled work$/i.test(title)) ? objectName : title;
 }
 
+function museumObjectUrl(record) {
+  try {
+    const url = new URL(String(record && record.object_url || ''));
+    const host = url.hostname.toLowerCase();
+    if (host !== 'www.metmuseum.org' && host !== 'metmuseum.org') return '';
+    url.protocol = 'https:';
+    return url.href;
+  } catch (_) {
+    return '';
+  }
+}
+
 const museumPageSize = 80;
 let museumPage = 0;
 let museumLetter = '';
@@ -1588,6 +1600,7 @@ async function renderMuseum(selectedIndex = 0) {
     const show = (record) => {
       const displayTitle = museumDisplayTitle(record);
       const objectName = String(record.object_name || '').trim();
+      const objectUrl = museumObjectUrl(record);
       const subtitle = displayTitle && displayTitle !== objectName
         ? (objectName || record.culture || 'Met collection object')
         : (record.culture || record.object_date || 'Met collection object');
@@ -1610,6 +1623,7 @@ async function renderMuseum(selectedIndex = 0) {
           ${record.medium ? `<p><strong>Material:</strong> ${escapeHtml(record.medium)}</p>` : ''}
           ${record.credit_line ? `<p><strong>Collection credit:</strong> ${escapeHtml(record.credit_line)}</p>` : ''}
         </section>
+${objectUrl ? `<p><a href="${escapeHtml(objectUrl)}" target="_blank" rel="noopener noreferrer">View on The Met</a></p>` : ''}
         <p class="bible-museum-credit">Metadata and public-domain image: The Metropolitan Museum of Art Open Access.</p>
       </article>`;
     };
