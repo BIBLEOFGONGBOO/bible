@@ -1,1 +1,1 @@
-window.LICENSE_CONFIG=Object.freeze({url:'https://vwvxpzktafhiuptsrugq.supabase.co',publishableKey:'sb_publishable_GLrKssDJrdEO4rYXpgnlIg_4MHyErjr',functionName:'license-content',authStorageKey:'bible_supabase_auth_v1',progressPrefix:'gongboo.license.'});
+window.LICENSE_CONFIG=Object.freeze({url:'https://yxudhflyxuztvzaiunva.supabase.co',publishableKey:'sb_publishable_9Kg6bvsSqZzOGMavBG3_1w_WO6WGbGB',functionName:'license-content',authStorageKey:'bible_supabase_auth_v1',progressPrefix:'gongboo.license.'});
