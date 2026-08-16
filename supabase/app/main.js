@@ -183,8 +183,9 @@ function isAdminUser(user) {
 }
 
 function isTrialUser(user) {
-  if (!user || isAdminUser(user)) return false;
-  return user.is_trial === true || normalizeRoleValue(user.payment_status) === 'p';
+  // Bible is free during beta: never apply trial/sample gating, regardless
+  // of member status. Backend Bible content is public for beta as well.
+  return false;
 }
 
 function clearAuthAndRedirect(reason) {

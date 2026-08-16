@@ -403,9 +403,8 @@
                     localStorage.setItem('quiz_current_subject_v1', JSON.stringify(subjects[0]));
                     localStorage.setItem('quiz_current_user_v1', JSON.stringify(user));
                     localStorage.setItem('quiz_available_subjects_v1', JSON.stringify(subjects));
-                    const welcomeText = user.is_trial
-                        ? '✅ FREE TRIAL · 20 sample questions per subject. Upgrade for full access.'
-                        : '✅ Welcome, ' + (user.name || email) + '!';
+                    // Bible is free during beta: no trial/sample gating.
+                    const welcomeText = '✅ Welcome, ' + (user.name || email) + '!';
                     showResult('loginResult', welcomeText, true);
                     window.location.href = './index.html?v=9.07-direct-bible-books1';
                 } else if (false) {
@@ -467,9 +466,7 @@
                     (subject.CATEGORY || 'QUIZ') +
                     ' · ' +
                     (
-                        isTrial
-                            ? 'FREE TRIAL · Questions 1–20'
-                            : Number(subject.SET_SIZE || 120) + ' questions per set'
+                        Number(subject.SET_SIZE || 120) + ' questions per set · Free beta'
                     );
 
                 button.appendChild(meta);
