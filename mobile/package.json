@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "GongBoo Bible Android wrapper for the Supabase web application.",
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "android:add": "cap add android",
     "android:sync": "cap sync android",
     "android:open": "cap open android",
-    "android:build:debug": "cd android && gradlew.bat assembleDebug"
+    "android:build:debug": "cd android && .\\gradlew.bat assembleDebug"
   },
   "dependencies": {
     "@capacitor-community/text-to-speech": "^6.1.0",
