@@ -323,98 +323,66 @@ async function openBibleChunkGuide_() {
     }
 
     // 기존 팝업이 있으면 제거
-    var old = document.getElementById('bibleChunkPopup');
-    if (old) old.remove();
+    // 이미 열려 있으면 ?를 다시 눌렀을 때 닫기
+var oldChunk = document.getElementById('bibleChunkInline');
 
-    var backdrop = document.createElement('div');
-    backdrop.id = 'bibleChunkPopup';
+if (oldChunk) {
+  oldChunk.remove();
+  return;
+}
 
-    backdrop.style.cssText =
-      'position:fixed;' +
-      'inset:0;' +
-      'z-index:99999;' +
-      'background:rgba(0,0,0,.45);' +
-      'display:flex;' +
-      'align-items:center;' +
-      'justify-content:center;' +
-      'padding:18px;';
+// 본문 카드 찾기
+var passageCard = DOM.questionContainer.querySelector('.passage-language-card');
 
-    var panel = document.createElement('div');
+if (!passageCard) {
+  alert('Show the passage first.');
+  return;
+}
 
-    panel.style.cssText =
-      'width:min(430px,100%);' +
-      'max-height:75vh;' +
-      'overflow:auto;' +
-      'background:#fff;' +
-      'border-radius:16px;' +
-      'padding:18px;' +
-      'box-shadow:0 18px 50px rgba(0,0,0,.3);';
+// CHUNK 한 줄 영역
+var chunkBox = document.createElement('div');
+chunkBox.id = 'bibleChunkInline';
 
-    var head = document.createElement('div');
+chunkBox.style.cssText =
+  'margin:6px 0 10px;' +
+  'padding:7px 10px;' +
+  'border-radius:8px;' +
+  'background:#f7f9fb;' +
+  'border:1px solid #e1e6eb;' +
+  'font-size:14px;' +
+  'line-height:1.8;' +
+  'color:#26384a;';
 
-    head.style.cssText =
-      'display:flex;' +
-      'justify-content:space-between;' +
-      'align-items:center;' +
-      'margin-bottom:12px;';
+// EN — KO  EN — KO 형식
+pairs.forEach(function(pair, index) {
+  var item = document.createElement('span');
 
-    var title = document.createElement('strong');
-    title.textContent = 'CHUNK';
+  item.style.cssText =
+    'display:inline;' +
+    'white-space:normal;';
 
-    var close = document.createElement('button');
-    close.type = 'button';
-    close.textContent = '×';
+  var enText = document.createElement('strong');
+  enText.textContent = pair.en;
 
-    close.style.cssText =
-      'border:0;' +
-      'background:transparent;' +
-      'font-size:28px;' +
-      'cursor:pointer;';
+  var separator = document.createTextNode(' — ');
 
-    close.onclick = function() {
-      backdrop.remove();
-    };
+  var koText = document.createElement('span');
+  koText.textContent = pair.ko;
 
-    head.appendChild(title);
-    head.appendChild(close);
-    panel.appendChild(head);
+  item.appendChild(enText);
+  item.appendChild(separator);
+  item.appendChild(koText);
 
-    pairs.forEach(function(pair) {
-      var row = document.createElement('div');
+  chunkBox.appendChild(item);
 
-      row.style.cssText =
-        'padding:10px 4px;' +
-        'border-bottom:1px solid #e5e7eb;';
+  // 다음 CHUNK와 간격만 준다.
+  if (index < pairs.length - 1) {
+    chunkBox.appendChild(document.createTextNode('   '));
+  }
+});
 
-      var enLine = document.createElement('div');
-      enLine.textContent = pair.en;
-
-      enLine.style.cssText =
-        'font-size:17px;' +
-        'font-weight:700;' +
-        'color:#172033;';
-
-      var koLine = document.createElement('div');
-      koLine.textContent = pair.ko;
-
-      koLine.style.cssText =
-        'margin-top:4px;' +
-        'font-size:16px;' +
-        'color:#52606d;';
-
-      row.appendChild(enLine);
-      row.appendChild(koLine);
-      panel.appendChild(row);
-    });
-
-    backdrop.appendChild(panel);
-    document.body.appendChild(backdrop);
-
-    backdrop.addEventListener('click', function(event) {
-      if (event.target === backdrop) {
-        backdrop.remove();
-      }
-    });
+// 본문 바로 아래 삽입
+passageCard.insertAdjacentElement('afterend', chunkBox);
 
   } catch (error) {
     console.error('[BIBLE CHUNK]', error);
