@@ -382,7 +382,13 @@ pairs.forEach(function(pair, index) {
 });
 
 // 본문 바로 아래 삽입
-passageCard.insertAdjacentElement('afterend', chunkBox);
+var passageRows = passageCard.querySelectorAll('.passage-language-row');
+
+if (passageRows.length) {
+  passageRows[0].insertAdjacentElement('afterend', chunkBox);
+} else {
+  passageCard.insertAdjacentElement('afterend', chunkBox);
+}
 
   } catch (error) {
     console.error('[BIBLE CHUNK]', error);
