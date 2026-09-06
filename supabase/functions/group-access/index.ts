@@ -7,7 +7,7 @@ const corsHeaders = {
   "Content-Type": "application/json;charset=utf-8",
 };
 
-const passwordResetRedirect = "https://biblegongboo.github.io/bible/supabase/app/reset-password.html";
+const passwordResetRedirect = "https://bibleofgongboo.github.io/bible/supabase/app/reset-password.html";
 
 function json(payload: unknown, status = 200) {
   return new Response(JSON.stringify(payload), { status, headers: corsHeaders });
