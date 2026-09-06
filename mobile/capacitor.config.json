@@ -4,10 +4,10 @@
   "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
-    "url": "https://biblegongboo.github.io/bible/supabase/app/?v=8.80-compact-mobile-header1",
+    "url": "https://bibleofgongboo.github.io/bible/supabase/app/?v=8.80-compact-mobile-header1",
     "cleartext": false,
     "allowNavigation": [
-      "biblegongboo.github.io",
+      "bibleofgongboo.github.io",
       "*.supabase.co"
     ]
   },
