@@ -215,17 +215,228 @@ function initBibleLogout_() {
   });
 }
 
-function initBibleGuide_() {
-  var guideButton = document.getElementById('bibleGuideToggle');
-  if (!guideButton || guideButton.dataset.bound) return;
-  guideButton.dataset.bound = '1';
-  guideButton.addEventListener('click', function() {
-    window.open(
-      './guide.html?v=8.87-guide-storage1',
-      '_blank',
-      'noopener,noreferrer'
+async function openBibleChunkGuide_() {
+  var ctx =
+    typeof window.getCurrentQuestionContext === 'function'
+      ? window.getCurrentQuestionContext()
+      : null;
+
+  if (!ctx || !ctx.N || !ctx.SUBJECT) {
+    alert('Open a Bible question first.');
+    return;
+  }
+
+  var config = window.BIBLE_SUPABASE_CONFIG || {};
+  var baseUrl = String(config.url || '').replace(/\/+$/, '');
+  var key = String(config.publishableKey || '');
+
+  if (!baseUrl || !key) {
+    alert('Bible database is not configured.');
+    return;
+  }
+
+  try {
+    var sheet =
+      String(ctx.SUBJECT).startsWith('NT-')
+        ? 'BIBLE-NT'
+        : 'BIBLE-OT';
+
+    // 현재 문제의 정확한 RECORD_ID 확인
+    var qResponse = await fetch(
+      baseUrl + '/functions/v1/' +
+      String(config.questionFunction || 'bible-content'),
+      {
+        method: 'POST',
+        headers: {
+          apikey: key,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sheet: sheet,
+          start: ctx.N,
+          limit: 1
+        })
+      }
     );
-  });
+
+    var qData = await qResponse.json();
+    var recordId =
+      qData &&
+      qData.data &&
+      qData.data[0] &&
+      qData.data[0].RECORD_ID;
+
+    if (!recordId) {
+      alert('Record ID was not found.');
+      return;
+    }
+
+    // 새 FINAL 테이블에서 EN + KO CHUNK 가져오기
+    var url =
+      baseUrl +
+      '/rest/v1/bible_question_translations' +
+      '?select=record_id,lang,chunk_1,chunk_2,chunk_3,chunk_4,chunk_5' +
+      '&record_id=eq.' + encodeURIComponent(recordId) +
+      '&lang=in.(EN,KO)';
+
+    var tResponse = await fetch(url, {
+      headers: {
+        apikey: key
+      }
+    });
+
+    var translations = await tResponse.json();
+
+    var en = translations.find(function(row) {
+      return String(row.lang).toUpperCase() === 'EN';
+    }) || {};
+
+    var ko = translations.find(function(row) {
+      return String(row.lang).toUpperCase() === 'KO';
+    }) || {};
+
+    var pairs = [];
+
+    for (var i = 1; i <= 5; i++) {
+      var enText = String(en['chunk_' + i] || '').trim();
+      var koText = String(ko['chunk_' + i] || '').trim();
+
+      if (enText || koText) {
+        pairs.push({
+          en: enText,
+          ko: koText
+        });
+      }
+    }
+
+    if (!pairs.length) {
+      alert('No CHUNK data for this question.');
+      return;
+    }
+
+    // 기존 팝업이 있으면 제거
+    var old = document.getElementById('bibleChunkPopup');
+    if (old) old.remove();
+
+    var backdrop = document.createElement('div');
+    backdrop.id = 'bibleChunkPopup';
+
+    backdrop.style.cssText =
+      'position:fixed;' +
+      'inset:0;' +
+      'z-index:99999;' +
+      'background:rgba(0,0,0,.45);' +
+      'display:flex;' +
+      'align-items:center;' +
+      'justify-content:center;' +
+      'padding:18px;';
+
+    var panel = document.createElement('div');
+
+    panel.style.cssText =
+      'width:min(430px,100%);' +
+      'max-height:75vh;' +
+      'overflow:auto;' +
+      'background:#fff;' +
+      'border-radius:16px;' +
+      'padding:18px;' +
+      'box-shadow:0 18px 50px rgba(0,0,0,.3);';
+
+    var head = document.createElement('div');
+
+    head.style.cssText =
+      'display:flex;' +
+      'justify-content:space-between;' +
+      'align-items:center;' +
+      'margin-bottom:12px;';
+
+    var title = document.createElement('strong');
+    title.textContent = 'CHUNK';
+
+    var close = document.createElement('button');
+    close.type = 'button';
+    close.textContent = '×';
+
+    close.style.cssText =
+      'border:0;' +
+      'background:transparent;' +
+      'font-size:28px;' +
+      'cursor:pointer;';
+
+    close.onclick = function() {
+      backdrop.remove();
+    };
+
+    head.appendChild(title);
+    head.appendChild(close);
+    panel.appendChild(head);
+
+    pairs.forEach(function(pair) {
+      var row = document.createElement('div');
+
+      row.style.cssText =
+        'padding:10px 4px;' +
+        'border-bottom:1px solid #e5e7eb;';
+
+      var enLine = document.createElement('div');
+      enLine.textContent = pair.en;
+
+      enLine.style.cssText =
+        'font-size:17px;' +
+        'font-weight:700;' +
+        'color:#172033;';
+
+      var koLine = document.createElement('div');
+      koLine.textContent = pair.ko;
+
+      koLine.style.cssText =
+        'margin-top:4px;' +
+        'font-size:16px;' +
+        'color:#52606d;';
+
+      row.appendChild(enLine);
+      row.appendChild(koLine);
+      panel.appendChild(row);
+    });
+
+    backdrop.appendChild(panel);
+    document.body.appendChild(backdrop);
+
+    backdrop.addEventListener('click', function(event) {
+      if (event.target === backdrop) {
+        backdrop.remove();
+      }
+    });
+
+  } catch (error) {
+    console.error('[BIBLE CHUNK]', error);
+    alert('Unable to load CHUNK data.');
+  }
+}
+
+
+function initBibleGuide_() {
+  var guideButton =
+    document.getElementById('bibleGuideToggle');
+
+  if (!guideButton || guideButton.dataset.bound) return;
+
+  guideButton.dataset.bound = '1';
+
+  guideButton.setAttribute(
+    'aria-label',
+    'Open vocabulary chunks'
+  );
+
+  guideButton.setAttribute(
+    'data-header-tooltip-title',
+    'Vocabulary'
+  );
+
+  guideButton.addEventListener(
+    'click',
+    openBibleChunkGuide_
+  );
 }
 
 function initBibleTapFeedback_() {
