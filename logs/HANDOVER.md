@@ -36,12 +36,12 @@ The broader product roadmap reuses the same architecture for K-12, AP, SAT, prof
 | Purpose | Canonical location | Notes |
 |---|---|---|
 | Bible private working root | `C:\Users\daeca\Desktop\gongboo.org\BIBLE` | Bible sources, generated data, local configuration and long-running scripts. |
-| Public Git worktree | `C:\Users\daeca\Documents\시스템 전문가 1\biblegongboo_repo_public` | Clean publishable worktree for `biblegongboo/bible`. |
-| Public repository | `https://github.com/biblegongboo/bible` | GitHub Pages application source. Treat as public. |
-| Public application | `https://biblegongboo.github.io/bible/supabase/app/` | Supabase browser application. |
+| Public Git worktree | `C:\Users\daeca\Documents\시스템 전문가 1\bibleofgongboo_repo_public` | Clean publishable worktree for `bibleofgongboo/bible`. |
+| Public repository | `https://github.com/bibleofgongboo/bible` | GitHub Pages application source. Treat as public. |
+| Public application | `https://bibleofgongboo.github.io/bible/supabase/app/` | Supabase browser application. |
 | Supabase project | `vwvxpzktafhiuptsrugq` | Bible production project. Never place keys in source. |
 | Google Sheets/GAS version | Existing Bible spreadsheet and GAS project | Retained as historical rollback/reference; Supabase is the current primary product direction. |
-| Android shell | `biblegongboo_repo_public/mobile` | Capacitor Android wrapper for the live browser application. |
+| Android shell | `bibleofgongboo_repo_public/mobile` | Capacitor Android wrapper for the live browser application. |
 | Graphics canonical source | `adopt397-dotcom/test/graphics` | Original verified development source. Bible uses a pinned local copy, not a live dependency. |
 
 ### Important operating decision
