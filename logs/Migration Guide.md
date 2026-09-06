@@ -29,9 +29,9 @@ Do not mix the two roots below. This is the most important protection against bo
 | Root | Role | Git rule |
 |---|---|---|
 | `C:\Users\<user>\Desktop\gongboo.org\BIBLE` | **Private canonical root**: raw downloads, source text, generated questions, normalization/factory scripts, backups, private configuration | Never push raw content, secrets, or user exports to public GitHub |
-| `C:\Users\<user>\Documents\시스템 전문가 1\biblegongboo_repo_public` | **Public application worktree**: static web files, migrations, Edge Function source, Capacitor shell | Public code only; content is served from Supabase |
+| `C:\Users\<user>\Documents\시스템 전문가 1\bibleofgongboo_repo_public` | **Public application worktree**: static web files, migrations, Edge Function source, Capacitor shell | Public code only; content is served from Supabase |
 
-The public repository is `biblegongboo/bible`. The active public application normally lives at `https://biblegongboo.github.io/bible/supabase/app/`.
+The public repository is `bibleofgongboo/bible`. The active public application normally lives at `https://bibleofgongboo.github.io/bible/supabase/app/`.
 
 ## 2. Before touching anything
 
@@ -93,8 +93,8 @@ supabase --version
 Example public clone:
 
 ```powershell
-git clone https://github.com/biblegongboo/bible.git biblegongboo_repo_public
-cd biblegongboo_repo_public
+git clone https://github.com/bibleofgongboo/bible.git bibleofgongboo_repo_public
+cd bibleofgongboo_repo_public
 git status
 ```
 
@@ -119,7 +119,7 @@ Suggested shape (replace placeholders locally; never commit values):
   },
   "paths": {
     "private_root": "C:/Users/<user>/Desktop/gongboo.org/BIBLE",
-    "public_worktree": "C:/Users/<user>/Documents/시스템 전문가 1/biblegongboo_repo_public"
+    "public_worktree": "C:/Users/<user>/Documents/시스템 전문가 1/bibleofgongboo_repo_public"
   }
 }
 ```
@@ -136,7 +136,7 @@ Rules:
 Static ES module files must be served over `http://` or `https://`; opening `index.html` as `file:///` causes browser CORS errors and is not a valid test.
 
 ```powershell
-cd C:\Users\<user>\Documents\시스템 전문가 1\biblegongboo_repo_public
+cd C:\Users\<user>\Documents\시스템 전문가 1\bibleofgongboo_repo_public
 python -m http.server 8000
 ```
 
@@ -425,7 +425,7 @@ Run this after any full migration and before a production handoff.
 Android source is in the public worktree under `mobile/`; app id is `org.gongboo.bible`.
 
 ```powershell
-cd C:\Users\<user>\Documents\시스템 전문가 1\biblegongboo_repo_public\mobile
+cd C:\Users\<user>\Documents\시스템 전문가 1\bibleofgongboo_repo_public\mobile
 npx cap sync android
 npx cap open android
 ```
@@ -469,7 +469,7 @@ Use AI to explain, refactor, draft tests, and surface dependencies. Do not accep
 ## 12. One-page quick start for the next developer
 
 1. Read `HANDOVER.md`, `PORTFOLIO/README.md`, `PORTFOLIO/REGISTRY.json`, `PORTFOLIO/DECISIONS.md`, and the relevant `PORTFOLIO/THREADS/*.md` record.
-2. Clone only `biblegongboo/bible` into `biblegongboo_repo_public`; obtain private content separately.
+2. Clone only `bibleofgongboo/bible` into `bibleofgongboo_repo_public`; obtain private content separately.
 3. Create ignored local secrets; never copy them to GitHub or browser code.
 4. Serve `supabase/app/` with an HTTP server and verify the current live project before editing.
 5. For a new Supabase project: link CLI → backup → apply migrations → deploy functions → import data in dependency order → set browser config → smoke-test → publish Pages.
