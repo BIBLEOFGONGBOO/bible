@@ -216,15 +216,18 @@ function initBibleLogout_() {
 }
 
 async function openBibleChunkGuide_() {
-  var q = currentQuestions[currentIndex];
+  var ctx =
+    typeof window.getCurrentQuestionContext === 'function'
+      ? window.getCurrentQuestionContext()
+      : null;
 
-  if (!q) {
+  if (!ctx) {
     alert('Open a Bible question first.');
     return;
   }
 
-  var currentN = q.N || q.originalNumber || 0;
-  var currentSubject = q.sourceCode || q.subject || '';
+  var currentN = Number(ctx.N || 0);
+  var currentSubject = String(ctx.SUBJECT || '').trim();
 
   if (!currentN || !currentSubject) {
     alert('Current Bible question could not be identified.');
@@ -242,9 +245,9 @@ async function openBibleChunkGuide_() {
 
   try {
     var sheet =
-      String(ctx.SUBJECT).startsWith('NT-')
-        ? 'BIBLE-NT'
-        : 'BIBLE-OT';
+  currentSubject.startsWith('NT-')
+    ? 'BIBLE-NT'
+    : 'BIBLE-OT';
 
     // 현재 문제의 정확한 RECORD_ID 확인
     var qResponse = await fetch(
@@ -258,7 +261,7 @@ async function openBibleChunkGuide_() {
         },
         body: JSON.stringify({
           sheet: sheet,
-          start: ctx.N,
+          start: currentN,
           limit: 1
         })
       }
