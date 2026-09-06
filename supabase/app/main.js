@@ -216,48 +216,20 @@ function initBibleLogout_() {
 }
 
 async function openBibleChunkGuide_() {
- var ctx =
-  typeof window.getCurrentQuestionContext === 'function'
-    ? window.getCurrentQuestionContext()
-    : null;
+  var q = currentQuestions[currentIndex];
 
-if (!ctx && typeof currentQuestion !== 'undefined' && currentQuestion) {
-  ctx = currentQuestion;
-}
+  if (!q) {
+    alert('Open a Bible question first.');
+    return;
+  }
 
-if (!ctx && typeof currentQuestions !== 'undefined' && currentQuestions.length) {
-  var idx =
-    typeof currentQuestionIndex !== 'undefined'
-      ? currentQuestionIndex
-      : 0;
+  var currentN = q.N || q.originalNumber || 0;
+  var currentSubject = q.sourceCode || q.subject || '';
 
-  ctx = currentQuestions[idx] || currentQuestions[0];
-}
-
-if (!ctx) {
-  alert('Open a Bible question first.');
-  return;
-}
-
-var currentN =
-  ctx.N ||
-  ctx.n ||
-  (ctx.raw && (ctx.raw.N || ctx.raw.n));
-
-var currentSubject =
-  ctx.SUBJECT ||
-  ctx.subject ||
-  ctx.sourceCode ||
-  ctx.SOURCE_CODE ||
-  (ctx.raw && (ctx.raw.SUBJECT || ctx.raw.SOURCE_CODE));
-
-if (!currentN || !currentSubject) {
-  alert('Current Bible question could not be identified.');
-  return;
-}
-
-ctx.N = currentN;
-ctx.SUBJECT = currentSubject;
+  if (!currentN || !currentSubject) {
+    alert('Current Bible question could not be identified.');
+    return;
+  }
 
   var config = window.BIBLE_SUPABASE_CONFIG || {};
   var baseUrl = String(config.url || '').replace(/\/+$/, '');
