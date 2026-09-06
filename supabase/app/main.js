@@ -382,12 +382,12 @@ pairs.forEach(function(pair, index) {
 });
 
 // 본문 바로 아래 삽입
-var englishPassage = passageCard.querySelector('[data-lang="en"]');
+var englishPassage = passageCard.querySelector('.language-line-en');
 
 if (englishPassage) {
   englishPassage.insertAdjacentElement('afterend', chunkBox);
 } else {
-  passageCard.insertBefore(chunkBox, passageCard.children[1] || null);
+  passageCard.insertAdjacentElement('afterend', chunkBox);
 }
 
   } catch (error) {
