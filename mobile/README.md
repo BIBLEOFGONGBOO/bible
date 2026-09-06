@@ -2,7 +2,7 @@
 
 This is a Capacitor Android shell for the live Supabase Bible app.
 
-- Live app: `https://biblegongboo.github.io/bible/supabase/app/`
+- Live app: `https://bibleofgongboo.github.io/bible/supabase/app/`
 - App identifier: `org.gongboo.bible`
 - Design: the app loads the live web application so quiz, content, map, and UI
   changes can be deployed from the web project without rebuilding the APK.
